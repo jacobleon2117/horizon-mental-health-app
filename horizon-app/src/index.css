@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 
+@layer utilities {
+    * {
+      outline: 1px solid rgba(255, 0, 0, 0.5);
+    }
+  } 
+    */
