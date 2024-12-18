@@ -1,4 +1,3 @@
-// src/pages/dashboard/pages/dashboard-home-page/index.jsx
 import React from "react";
 import {
   Calendar,
@@ -92,14 +91,12 @@ const DashboardHomePage = () => {
         </button>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {dashboardStats.map((stat, index) => (
           <DashboardCard key={index} {...stat} />
         ))}
       </div>
 
-      {/* Upcoming Sessions */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           Upcoming Sessions
@@ -111,7 +108,6 @@ const DashboardHomePage = () => {
         </div>
       </div>
 
-      {/* Quick Access */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           Quick Access

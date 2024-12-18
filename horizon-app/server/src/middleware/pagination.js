@@ -1,4 +1,3 @@
-// src/middleware/pagination.js
 const paginateResults = (model) => {
   return async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;

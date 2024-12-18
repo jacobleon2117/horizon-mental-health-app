@@ -1,4 +1,3 @@
-// src/models/User.js
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
@@ -26,8 +25,8 @@ const userSchema = new mongoose.Schema({
     phoneNumber: String,
     address: String,
     bio: String,
-    specialization: String, // for therapists
-    licenseNumber: String, // for therapists
+    specialization: String,
+    licenseNumber: String,
   },
   createdAt: {
     type: Date,
