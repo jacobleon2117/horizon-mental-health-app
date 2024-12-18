@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const SignupForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -7,11 +8,30 @@ const SignupForm = ({ onClose }) => {
     password: "",
     confirmPassword: "",
   });
+  const [error, setError] = useState("");
+  const { register } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Signup:", formData);
-    onClose();
+
+    // Basic validation
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      // Attempt registration
+      await register(formData.email, formData.password, formData.fullName);
+
+      // Close the modal on successful registration
+      onClose();
+    } catch (err) {
+      // Set error message
+      setError(
+        err.response?.data?.message || "Registration failed. Please try again."
+      );
+    }
   };
 
   return (
@@ -19,6 +39,14 @@ const SignupForm = ({ onClose }) => {
       <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
         Create Account
       </h2>
+      {error && (
+        <div
+          className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+          role="alert"
+        >
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label

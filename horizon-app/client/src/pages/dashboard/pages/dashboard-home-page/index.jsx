@@ -1,12 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Calendar,
-  MessageSquare,
   FileText,
-  Clock,
+  MessageSquare,
   Users,
+  Clock,
   BookOpen,
 } from "lucide-react";
+import SideNav from "../../../../components/SideNav";
 
 const DashboardCard = ({ icon: Icon, title, value, description }) => (
   <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
@@ -14,9 +16,11 @@ const DashboardCard = ({ icon: Icon, title, value, description }) => (
       <div>
         <p className="text-gray-600 font-medium">{title}</p>
         <h3 className="text-2xl font-bold text-[rgb(26,55,91)] mt-2">
-          {value}
+          {value || "N/A"}
         </h3>
-        <p className="text-gray-500 text-sm mt-1">{description}</p>
+        <p className="text-gray-500 text-sm mt-1">
+          {description || "No data available"}
+        </p>
       </div>
       <Icon className="text-[rgb(26,55,91)] opacity-80" size={24} />
     </div>
@@ -27,13 +31,19 @@ const UpcomingSession = ({ title, therapist, time, type }) => (
   <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
     <div className="flex justify-between items-start">
       <div>
-        <h3 className="font-semibold text-[rgb(26,55,91)]">{title}</h3>
-        <p className="text-gray-600 text-sm mt-1">with {therapist}</p>
-        <p className="text-gray-500 text-sm mt-2">{type}</p>
+        <h3 className="font-semibold text-[rgb(26,55,91)]">
+          {title || "No session scheduled"}
+        </h3>
+        <p className="text-gray-600 text-sm mt-1">
+          {therapist || "No therapist assigned"}
+        </p>
+        <p className="text-gray-500 text-sm mt-2">
+          {type || "No type specified"}
+        </p>
       </div>
       <div className="flex items-center text-gray-500 text-sm">
         <Clock size={14} className="mr-1" />
-        {time}
+        {time || "N/A"}
       </div>
     </div>
   </div>
@@ -44,87 +54,85 @@ const DashboardHomePage = () => {
     {
       icon: Calendar,
       title: "Upcoming Sessions",
-      value: "3",
-      description: "Next session tomorrow",
+      value: null,
+      description: null,
     },
     {
       icon: FileText,
       title: "Journal Entries",
-      value: "12",
-      description: "2 entries this week",
+      value: null,
+      description: null,
     },
     {
       icon: MessageSquare,
       title: "Messages",
-      value: "5",
-      description: "3 unread messages",
+      value: null,
+      description: null,
     },
     {
       icon: Users,
       title: "Support Group",
-      value: "2",
-      description: "Active group sessions",
+      value: null,
+      description: null,
     },
   ];
 
-  const upcomingSessions = [
-    {
-      title: "Weekly Check-in",
-      therapist: "Dr. Sarah Smith",
-      time: "Tomorrow at 2:00 PM",
-      type: "Individual Session",
-    },
-    {
-      title: "Anxiety Management",
-      therapist: "Dr. Michael Chen",
-      time: "Thursday at 3:00 PM",
-      type: "Group Session",
-    },
-  ];
+  const upcomingSessions = [];
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
-        <button className="bg-[rgb(26,55,91)] text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors">
-          Schedule Session
-        </button>
-      </div>
+    <div className="flex">
+      <SideNav />
+      <div className="flex-1 p-8">
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-800">
+              Dashboard Overview
+            </h1>
+            <button className="bg-[rgb(26,55,91)] text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+              Schedule Session
+            </button>
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {dashboardStats.map((stat, index) => (
-          <DashboardCard key={index} {...stat} />
-        ))}
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {dashboardStats.map((stat, index) => (
+              <DashboardCard key={index} {...stat} />
+            ))}
+          </div>
 
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          Upcoming Sessions
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {upcomingSessions.map((session, index) => (
-            <UpcomingSession key={index} {...session} />
-          ))}
-        </div>
-      </div>
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Upcoming Sessions
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {upcomingSessions.length > 0 ? (
+                upcomingSessions.map((session, index) => (
+                  <UpcomingSession key={index} {...session} />
+                ))
+              ) : (
+                <p>No upcoming sessions. Start by adding one!</p>
+              )}
+            </div>
+          </div>
 
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          Quick Access
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-all flex items-center justify-center gap-2 text-[rgb(26,55,91)]">
-            <FileText size={20} />
-            <span>Write Journal Entry</span>
-          </button>
-          <button className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-all flex items-center justify-center gap-2 text-[rgb(26,55,91)]">
-            <Calendar size={20} />
-            <span>Schedule Appointment</span>
-          </button>
-          <button className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-all flex items-center justify-center gap-2 text-[rgb(26,55,91)]">
-            <BookOpen size={20} />
-            <span>View Resources</span>
-          </button>
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Quick Access
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-all flex items-center justify-center gap-2 text-[rgb(26,55,91)]">
+                <FileText size={20} />
+                <span>Write Journal Entry</span>
+              </button>
+              <button className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-all flex items-center justify-center gap-2 text-[rgb(26,55,91)]">
+                <Calendar size={20} />
+                <span>Schedule Appointment</span>
+              </button>
+              <button className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-all flex items-center justify-center gap-2 text-[rgb(26,55,91)]">
+                <BookOpen size={20} />
+                <span>View Resources</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,11 +1,26 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate hook
 import { ChevronDown } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const HeroSection = () => {
+  const { user } = useAuth(); // Access user state from context
+  const navigate = useNavigate(); // Hook to programmatically navigate
+
   const scrollToNextSection = () => {
     const aboutSection = document.getElementById("about-section");
     if (aboutSection) {
       aboutSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleGetStartedClick = () => {
+    if (!user) {
+      // If the user is not logged in, navigate to the login page
+      navigate("/login");
+    } else {
+      // If the user is logged in, navigate to the dashboard
+      navigate("/dashboard");
     }
   };
 
@@ -40,18 +55,29 @@ const HeroSection = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="/dashboard"
-            className="bg-[rgb(26,55,91)] text-white px-8 py-3 rounded-lg hover:bg-[rgb(129,136,151)] transition-all duration-300 text-base font-medium shadow-lg hover:shadow-xl"
-          >
-            Get Started
-          </a>
-          <a
-            href="#features"
-            className="bg-white/30 backdrop-blur-sm text-white px-8 py-3 rounded-lg hover:bg-white/20 transition-all duration-300 text-base font-medium border border-white/30"
-          >
-            Learn More
-          </a>
+          {user ? (
+            <Link
+              to="/dashboard"
+              className="bg-[rgb(26,55,91)] text-white px-8 py-3 rounded-lg hover:bg-[rgb(129,136,151)] transition-all duration-300 text-base font-medium shadow-lg hover:shadow-xl"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <>
+              <button
+                onClick={handleGetStartedClick}
+                className="bg-[rgb(26,55,91)] text-white px-8 py-3 rounded-lg hover:bg-[rgb(129,136,151)] transition-all duration-300 text-base font-medium shadow-lg hover:shadow-xl"
+              >
+                Get Started
+              </button>
+              <Link
+                to="#features"
+                className="bg-white/30 backdrop-blur-sm text-white px-8 py-3 rounded-lg hover:bg-white/20 transition-all duration-300 text-base font-medium border border-white/30"
+              >
+                Learn More
+              </Link>
+            </>
+          )}
         </div>
       </div>
 

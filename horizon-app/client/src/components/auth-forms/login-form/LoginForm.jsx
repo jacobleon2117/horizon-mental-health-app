@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const LoginForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -6,11 +7,23 @@ const LoginForm = ({ onClose }) => {
     password: "",
     rememberMe: false,
   });
+  const [error, setError] = useState("");
+  const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login:", formData);
-    onClose();
+    try {
+      // Attempt login
+      await login(formData.email, formData.password, formData.rememberMe);
+
+      // Close the modal on successful login
+      onClose();
+    } catch (err) {
+      // Set error message
+      setError(
+        err.response?.data?.message || "Login failed. Please try again."
+      );
+    }
   };
 
   return (
@@ -18,6 +31,14 @@ const LoginForm = ({ onClose }) => {
       <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
         Sign in
       </h2>
+      {error && (
+        <div
+          className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+          role="alert"
+        >
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label

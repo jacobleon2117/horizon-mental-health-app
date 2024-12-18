@@ -1,27 +1,33 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import DashboardLayout from "./components/DashboardLayout";
 import DashboardHomePage from "./pages/dashboard-home-page";
-import EVisitPage from "./pages/e_visit-page";
 import FindTherapistsPage from "./pages/find-therapists-page";
 import HealthReportsPage from "./pages/health-reports-page";
-import JournalsPage from "./pages/journals-page";
-import ScheduleAppointmentsPage from "./pages/schedule-appointments-page";
+import EVisitPage from "./pages/e-visit-page";
 import SettingsPage from "./pages/settings-page";
+import ScheduleAppointmentsPage from "./pages/schedule-appointments-page";
+import JournalEntry from "./pages/journals-page";
+import SideNav from "../../components/SideNav";
 
 const Dashboard = () => {
   return (
-    <DashboardLayout>
-      <Routes>
-        <Route path="/" element={<DashboardHomePage />} />
-        <Route path="/e-visit" element={<EVisitPage />} />
-        <Route path="/find-therapists" element={<FindTherapistsPage />} />
-        <Route path="/health-reports" element={<HealthReportsPage />} />
-        <Route path="/journals" element={<JournalsPage />} />
-        <Route path="/schedule" element={<ScheduleAppointmentsPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-      </Routes>
-    </DashboardLayout>
+    <div className="dashboard-container flex">
+      <SideNav />
+      <div className="dashboard-content flex-grow">
+        <Routes>
+          <Route path="dashboard-home-page" element={<DashboardHomePage />} />
+          <Route path="e-visit-page" element={<EVisitPage />} />
+          <Route path="find-therapists-page" element={<FindTherapistsPage />} />
+          <Route path="health-reports-page" element={<HealthReportsPage />} />
+          <Route path="journals-page" element={<JournalEntry />} />
+          <Route
+            path="schedule-appointments-page"
+            element={<ScheduleAppointmentsPage />}
+          />
+          <Route path="settings-page" element={<SettingsPage />} />
+        </Routes>
+      </div>
+    </div>
   );
 };
 

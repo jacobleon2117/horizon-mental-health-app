@@ -1,4 +1,3 @@
-// src/server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -7,11 +6,24 @@ require("dotenv").config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS policy error: Not allowed by origin"));
+      }
+    },
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
-// Request logging middleware
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.url}`, {
     ip: req.ip,
@@ -20,7 +32,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Database Connection
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
@@ -32,25 +43,25 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
-// Import routes
 const authRoutes = require("./routes/auth");
-
-// Use routes
 app.use("/api/auth", authRoutes);
 
-// Basic route for testing
 app.get("/api/test", (req, res) => {
   logger.info("Test endpoint accessed");
   res.json({ message: "API is working!" });
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
+  if (err.message && err.message.includes("CORS")) {
+    return res
+      .status(403)
+      .json({ message: "CORS error: Not allowed by origin" });
+  }
   logger.error("Unhandled error:", { error: err.stack });
   res.status(500).json({ message: "Something went wrong!" });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
   console.log(`Server running on port ${PORT}`);
